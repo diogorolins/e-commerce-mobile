@@ -42,7 +42,6 @@ export class ProfilePage {
   getImageIfExists() {
     this.clientService.getImageFromBucket(this.client.id)
       .subscribe(response => {
-        console.log("nao conseguiu");
         this.client.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.client.id}.jpg`
       },
         error => {
