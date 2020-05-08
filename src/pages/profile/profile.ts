@@ -36,7 +36,12 @@ export class ProfilePage {
           this.client = response;
           this.getImageIfExists();
         },
-        error => {});
+        error => {
+          this.navCtrl.setRoot("HomePage")
+        });
+    else {
+      this.navCtrl.setRoot("HomePage")
+    }
   }
 
   getImageIfExists() {
@@ -45,6 +50,7 @@ export class ProfilePage {
         this.client.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.client.id}.jpg`
       },
         error => {
+
         });
   }
 
