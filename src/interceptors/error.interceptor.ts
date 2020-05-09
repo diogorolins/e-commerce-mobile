@@ -3,6 +3,7 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HTTP_INTERCEPTORS
 import { Observable } from 'rxjs/Rx'; // IMPORTANTE: IMPORT ATUALIZADO
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
 import { StorageService } from '../services/storage.service';
+import { FieldMessage } from '../models/fieldMessage';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -30,12 +31,38 @@ export class ErrorInterceptor implements HttpInterceptor {
           case 404:
             this.handle404();
             break;
+          case 422:
+            this.handle422(errorObj);
+            break;
           default:
             this.handleDefaultError(errorObj);
         }  
         return Observable.throw(errorObj);
       }) as any;
   }
+
+  handle422(errorObj) {
+    let alert = this.alertCtrl.create({
+      title: 'Erro de Validação',
+      message: this.listErrors(errorObj.errors),
+      enableBackdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ok'
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  listErrors(message: FieldMessage[]): string {
+    let s : string = '';
+    for (var i=0; i<message.length; i++){
+      s += '<p><strong>' + message[i].fieldName + ': </strong>'+ message[i].message + '</p>';
+    }
+    return s;
+  }
+
   handle404() {
     let alert = this.alertCtrl.create({
       title: 'Erro na página',
@@ -49,6 +76,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     });
     alert.present();
   }
+
   handleDefaultError(errorObj) {
     let alert = this.alertCtrl.create({
       title: `Erro ${errorObj.status}: ${errorObj.error}` ,
@@ -81,6 +109,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     this.strorage.setLocalUser(null);
   }
 }
+
 export const ErrorInterceptorProvider = {
   provide: HTTP_INTERCEPTORS,
   useClass: ErrorInterceptor,

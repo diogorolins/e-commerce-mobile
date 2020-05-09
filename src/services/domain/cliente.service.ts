@@ -12,11 +12,19 @@ export class ClienteService {
   }
 
   findByEmail(email: string) : Observable<ClienteDTO>{
-    
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-      
     return this.http.get<ClienteDTO>(
       `${API_CONFIG.baseUrl}/clients/email/?email=${email}`);
+  }
+
+  insert(obj: ClienteDTO){
+    return this.http.post(
+      `${API_CONFIG.baseUrl}/clients`,
+      obj,
+      {
+        observe: 'response',
+        responseType: 'text'
+      }
+    )
   }
 
   getImageFromBucket(id: string): Observable<any> {
