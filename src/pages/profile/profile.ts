@@ -51,7 +51,7 @@ export class ProfilePage {
       },
         error => {
 
-        });
+    });
   }
 
 }

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ProdutoDto } from '../../models/produto.dto';
+import { ProdutoService } from '../../services/domain/produto.service';
+import { API_CONFIG } from '../../config/api.config';
 
 /**
  * Generated class for the ProdutosPage page.
@@ -18,22 +20,35 @@ export class ProdutosPage {
 
   items: ProdutoDto[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public produtoService: ProdutoService) {
   }
 
   ionViewDidLoad() {
-    this.items = [
-      {
-        id: "1",
-        name: 'Mouse',
-        price: 80.99
+    this.produtoService.findByCategoria(this.navParams.get('categoria_id'))
+      .subscribe(response => {
+        this.items = response['content'];
+        this.loadImageUrls();
       },
-      {
-        id: "2",
-        name: 'Teclado',
-        price: 100.00
-      }
-    ]
+      error => {}
+      );
+  }
+
+  loadImageUrls() {
+    for(var i=0; i< this.items.length; i++) {
+      let item = this.items[i];
+      this.produtoService.getSmallImageFromBucket(item.id)
+        .subscribe(response => {
+          item.imageUrl = `${API_CONFIG.bucketBaseUrl}/prod${item.id}-small.jpg`
+        },
+          error => {});
+    }
+  }
+
+  showDetail(produto_id: string) {
+    this.navCtrl.push("ProdutoDetailPage", {produto_id: produto_id});
   }
 
 }
