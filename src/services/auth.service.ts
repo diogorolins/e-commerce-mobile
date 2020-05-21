@@ -45,4 +45,11 @@ export class AuthService {
   logout(){
     this.storage.setLocalUser(null);
   }
+
+  sendNewPassword(email: string) {
+    return this.http.post(`${API_CONFIG.baseUrl}/auth/forgot`, {email: email}, {
+      observe: 'response',
+      responseType: 'text'
+    })
+  }
 }

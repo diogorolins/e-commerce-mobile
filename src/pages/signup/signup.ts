@@ -33,6 +33,7 @@ export class SignupPage {
     public cidadeService: CidadeService,
     public clienteService: ClienteService,
     public altertCtrl: AlertController) {
+      
       this.formGroup = this.formBuilder.group({
         name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
         email: ['', [Validators.email, Validators.required]],
@@ -73,8 +74,7 @@ export class SignupPage {
   }
 
   signupUser(){
-    console.log(this.formGroup.value);
-  
+    
     this.clienteService.insert(this.formGroup.value)
       .subscribe(response => {
         this.insertOk();

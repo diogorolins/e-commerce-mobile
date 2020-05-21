@@ -3,6 +3,8 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth.service';
+import { StorageService } from '../services/storage.service';
+import { ClienteService } from '../services/domain/cliente.service';
 
 @Component({
   templateUrl: 'app.html'
@@ -14,11 +16,13 @@ export class MyApp {
 
   pages: Array<{title: string, component: string}>;
 
+
   constructor(
     public platform: Platform, 
     public statusBar: StatusBar, 
     public splashScreen: SplashScreen,
-    public auth: AuthService) {
+    public auth: AuthService
+   ) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -29,7 +33,6 @@ export class MyApp {
       { title: 'Logout', component: 'Logout' }
 
     ];
-
   }
 
   initializeApp() {
@@ -42,6 +45,7 @@ export class MyApp {
   }
 
   openPage(page: {title: string, component:string}) {
+    
     switch (page.title) {
       case 'Logout':
         this.auth.logout();

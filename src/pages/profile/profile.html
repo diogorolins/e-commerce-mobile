@@ -8,9 +8,42 @@
 </ion-header>
 
 <ion-content padding>
-<ion-avatar>
-  <img class="circle" [src]="client?.imageUrl || 'assets/imgs/avatar-blank.png'">
-</ion-avatar>
-<h2 text-center>{{client?.name}}</h2>
-<p text-center>{{client?.email}}</p>
+  <ion-item>
+    <button *ngIf="isAdm > '0'" ion-button outline block (click)="goToAdmin()">Administração</button>
+  </ion-item>
+  <ion-avatar>
+    <img class="circle" [src]="client?.imageUrl || 'assets/imgs/avatar-blank.png'">
+  </ion-avatar>
+  <h2 text-center>{{client?.name}}</h2>
+  <p text-center><strong>E-mail:</strong> {{client?.email}}</p>
+  <p text-center><strong>CPF/CNPJ:</strong> {{client?.cpfCnpj}}</p>
+  <p text-center><strong>Tipo:</strong> {{client?.clientType}}</p>
+  <ion-item>
+    <button ion-button outline block *ngIf="!mais" (click)="showAddress()">Mostrar mais</button>
+    <button ion-button outline block *ngIf="mais" (click)="showAddress()">Mostrar menos</button>
+  </ion-item>
+  <ion-item *ngIf="mais">
+    <p text-center><strong>Endereço(s)</strong> </p>
+    <ion-card *ngFor="let address of addresses" class="border">
+      <p><strong>Rua: </strong>{{address.street}}</p>
+      <p><strong>Nr: </strong>{{address.number}}</p>
+      <p><strong>Compl: </strong>{{address.compl}}</p>
+      <p><strong>Bairro: </strong>{{address.neighborhood}}</p>
+      <p><strong>Cidade: </strong>{{address.city.name}}</p>
+      <p><strong>Estado: </strong>{{address.city.state.name}}</p>
+      <p><strong>Cep: </strong>{{address.zipCode}}</p>
+    </ion-card>
+  </ion-item>
+
+  <ion-card>
+    <ion-item *ngIf="picture">
+      <img [src]="picture">
+    </ion-item>
+    <ion-item>
+      <button ion-button outline block (click)="goToUpdate()">Alterar Perfil</button>
+      <button ion-button block (click)="getCameraPicture()" [disabled]="cameraOn">Camera</button>
+      <button *ngIf="picture" ion-button outline block (click)="sendPicture()">Enviar Imagem</button>
+      <button *ngIf="picture" ion-button outline block (click)="cancel()" >Cancelar</button>
+    </ion-item>
+  </ion-card>
 </ion-content>

@@ -49,4 +49,9 @@ export class HomePage {
     this.navCtrl.push("SignupPage");
   }
 
+  forgotPassword(){
+    this.navCtrl.push("ForgotPasswordPage")
+    
+  }
+
 }

@@ -29,7 +29,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             this.handle403();
             break;
           case 404:
-            this.handle404();
+            this.handle404(errorObj);
             break;
           case 422:
             this.handle422(errorObj);
@@ -63,10 +63,10 @@ export class ErrorInterceptor implements HttpInterceptor {
     return s;
   }
 
-  handle404() {
+  handle404(errorObj) {
     let alert = this.alertCtrl.create({
-      title: 'Erro na página',
-      message: 'Página não encontrada',
+      title: 'Não encontrado.',
+      message: errorObj.message,
       enableBackdropDismiss: false,
       buttons: [
         {
