@@ -4,7 +4,7 @@ import { CartItem } from '../../models/cart-item';
 import { ProdutoService } from '../../services/domain/produto.service';
 import { API_CONFIG } from '../../config/api.config';
 import { CartService } from '../../services/domain/cart.services';
-import { ProdutoDto } from '../../models/produto.dto';
+import { ProdutoDTO } from '../../models/produto.dto';
 
 /**
  * Generated class for the CartPage page.
@@ -46,15 +46,15 @@ export class CartPage {
     }
   }
 
-  removeItem(produto: ProdutoDto) {
+  removeItem(produto: ProdutoDTO) {
     this.items = this.cartService.removeProduto(produto).items;
   }
 
-  increaseQuantity(produto: ProdutoDto) {
+  increaseQuantity(produto: ProdutoDTO) {
     this.items = this.cartService.increaseQuantity(produto).items;
   }
 
-  decreaseQuantity(produto: ProdutoDto) {
+  decreaseQuantity(produto: ProdutoDTO) {
     this.items = this.cartService.decreaseQuantity(produto).items;
   }
 

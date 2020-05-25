@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Produtos</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>   
+<ion-item>
+  <ion-label stacked>Categoria</ion-label>
+  <ion-select [(ngModel)]="categoriaId" (ionChange)="chargeProducts()" cancelText="cancelar">
+    <ion-option *ngFor="let c of categorias" [value]="c.id">{{c.name}}</ion-option>
+  </ion-select>
+</ion-item>
+<ion-list>
+  <ion-item *ngFor="let p of produtos">
+    <ion-label>{{p.name}}</ion-label>
+    <ion-checkbox  [(ngModel)] = "p.selected"  (ionChange)="enableAlter(p.id)" ></ion-checkbox>
+  </ion-item>
+</ion-list>
+<button ion-button small (click) = "goToNew()">Novo</button>
+<button ion-button small (click) = "goToAlter()" [disabled] = "alterOk">Alterar</button>
+<button ion-button small color="danger" [disabled] = "deleteOk" (click)="confirmDelete()">Apagar</button>
+<ion-item>
+  <button ion-button outline small block (click)="back()">Voltar</button>
+</ion-item>
+</ion-content>

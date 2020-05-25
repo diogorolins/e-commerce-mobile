@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams} from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { EstadoService } from '../../services/domain/estado.service';
 import { CidadeService } from '../../services/domain/cidade.service';
@@ -8,6 +8,7 @@ import { CidadeDTO } from '../../models/cidade.dto';
 import { ClienteService } from '../../services/domain/cliente.service';
 import { ClienteDTO } from '../../models/cliente.dto';
 import { API_CONFIG } from '../../config/api.config';
+import { AlertService } from '../../services/alert.service';
 
 /**
  * Generated class for the SignupPage page.
@@ -35,7 +36,7 @@ export class UpdateProfilePage {
     public estadoService: EstadoService,
     public cidadeService: CidadeService,
     public clienteService: ClienteService,
-    public altertCtrl: AlertController) {
+    public altertCtrl: AlertService) {
 
     this.client = this.navParams.get("client");
     
@@ -89,20 +90,12 @@ export class UpdateProfilePage {
   }
 
   updateOk() {
-    let alert = this.altertCtrl.create({
+    let alert = {
       title: 'Sucesso.',
-      message: 'Dados alterados com sucesso.',
-      enableBackdropDismiss: false,
-      buttons: [
-        {
-          text: 'Ok',
-          handler: () => {
-            this.navCtrl.setRoot("ProfilePage");
-          }
-        }
-      ]
-    });
-    alert.present();
+      message: 'Dados alterados com sucesso.',     
+      event: () => this.navCtrl.setRoot("ProfilePage")
+    }
+    this.altertCtrl.showAlert(alert);
   }
 
   getIdRadioClientType(clientType: string) {   

@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Nova Categoria</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item>
+    <ion-label stacked>Nome</ion-label>
+    <ion-input name="name" [(ngModel)]="categoria.name" type="text"></ion-input>
+  </ion-item>
+  <button ion-button block type="submit" (click)="submitForm()">Enviar Categoria</button>
+
+</ion-content>
+

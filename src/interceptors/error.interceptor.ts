@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { Observable } from 'rxjs/Rx'; // IMPORTANTE: IMPORT ATUALIZADO
-import { AlertController } from 'ionic-angular/components/alert/alert-controller';
+import { Observable } from 'rxjs/Rx'; 
 import { StorageService } from '../services/storage.service';
 import { FieldMessage } from '../models/fieldMessage';
+import { AlertService } from '../services/alert.service';
+import { ProdutoService } from '../services/domain/produto.service';
+
+
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-
-  constructor(public strorage: StorageService, public alertCtrl: AlertController) {
+  
+  constructor(
+    public strorage: StorageService, 
+    public alertCtrl: AlertService,
+    public produtoService: ProdutoService) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -24,6 +30,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         switch (errorObj.status) {
           case 401:
             this.handle401();
+            break;
+          case 400:
+            this.handle400(errorObj);
             break;
           case 403:
             this.handle403();
@@ -42,17 +51,11 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 
   handle422(errorObj) {
-    let alert = this.alertCtrl.create({
+    let objAlert = {
       title: 'Erro de Validação',
-      message: this.listErrors(errorObj.errors),
-      enableBackdropDismiss: false,
-      buttons: [
-        {
-          text: 'Ok'
-        }
-      ]
-    });
-    alert.present();
+      message: this.listErrors(errorObj.errors)
+    }
+    this.alertCtrl.showAlert(objAlert);   
   }
 
   listErrors(message: FieldMessage[]): string {
@@ -64,45 +67,39 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 
   handle404(errorObj) {
-    let alert = this.alertCtrl.create({
-      title: 'Não encontrado.',
-      message: errorObj.message,
-      enableBackdropDismiss: false,
-      buttons: [
-        {
-          text: 'Ok'
-        }
-      ]
-    });
-    alert.present();
+    let objAlert = {
+      title: 'Não encontrado',
+      message: errorObj.message
+    }
+    this.alertCtrl.showAlert(objAlert);  
+  }
+
+  handle400(errorObj) {
+    console.log(errorObj);
+    if (errorObj.error == "Problema de integridade de dados"){
+      let objAlert = {
+      title: 'Não permitido.',
+      message: `O Item ${errorObj.message} possui referências.`,
+      class: 'alertDanger'
+    }
+    this.alertCtrl.showAlert(objAlert);  
+    }
   }
 
   handleDefaultError(errorObj) {
-    let alert = this.alertCtrl.create({
-      title: `Erro ${errorObj.status}: ${errorObj.error}` ,
-      message: errorObj.message,
-      enableBackdropDismiss: false,
-      buttons: [
-        {
-          text: 'Ok'
-        }
-      ]
-    });
-    alert.present();
+    let objAlert = {
+      title: `Erro ${errorObj.status}: ${errorObj.error}`,
+      message: errorObj.message
+    }
+    this.alertCtrl.showAlert(objAlert);  
   }
 
   handle401() {
-    let alert = this.alertCtrl.create({
+    let objAlert = {
       title: 'Falha na autenticação',
-      message: 'Email ou senha incorretos',
-      enableBackdropDismiss: false,
-      buttons: [
-        {
-          text: 'Ok'
-        }
-      ]
-    });
-    alert.present();
+      message: 'Email ou senha incorretos'
+    }
+    this.alertCtrl.showAlert(objAlert);  
   }
 
   handle403() {

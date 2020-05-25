@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Rx";
+import { ProdutoDTO } from "../../models/produto.dto";
 import { API_CONFIG } from "../../config/api.config";
-import { ProdutoDto } from "../../models/produto.dto";
 
 @Injectable()
 export class ProdutoService {
@@ -25,6 +25,38 @@ export class ProdutoService {
   }
 
   findById(produto_id: string) {
-    return this.http.get<ProdutoDto>(`${API_CONFIG.baseUrl}/products/${produto_id}`);
+    return this.http.get<ProdutoDTO>(`${API_CONFIG.baseUrl}/products/${produto_id}`);
+  }
+
+  insert(produto) {
+    return this.http.post(
+      `${API_CONFIG.baseUrl}/products`,
+      produto,
+      {
+        observe: 'response',
+        responseType: 'text'
+      }
+    )
+  }
+
+  update(produto) {
+    return this.http.put(
+      `${API_CONFIG.baseUrl}/products/${produto.id}`,
+      produto,
+      {
+        observe: 'response',
+        responseType: 'text'
+      }
+    )
+  }
+
+  remove(product_id: string): Observable<any>{
+    return this.http.delete(
+      `${API_CONFIG.baseUrl}/products/${product_id}`,
+      {
+        observe: 'response',
+        responseType: 'text'
+      }
+    )
   }
 }

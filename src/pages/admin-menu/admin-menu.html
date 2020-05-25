@@ -12,8 +12,8 @@
 
 <ion-content padding>
   <ion-item>
-    <button ion-button block >Gerenciar Produtos</button>
-    <button ion-button block >Gerenciar Categorias</button>
+    <button ion-button block (click)= "goToProduct()" >Gerenciar Produtos</button>
+    <button ion-button block (click)= "goToCategory()">Gerenciar Categorias</button>
     <button ion-button outline block (click)="back()">Sair</button>
   </ion-item>
 </ion-content>

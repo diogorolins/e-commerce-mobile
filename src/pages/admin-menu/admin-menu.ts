@@ -17,6 +17,14 @@ export class AdminMenuPage {
    
   }
 
+  goToProduct() {
+    this.navCtrl.setRoot("ProductAdmPage");
+  }
+
+  goToCategory() {
+    this.navCtrl.setRoot("CategoryAdmPage");
+  }
+
   back() {
     this.navCtrl.setRoot("ProfilePage");
   }

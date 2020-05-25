@@ -47,7 +47,7 @@ export class ProfilePage {
         .subscribe(response => {
           this.client = response as ClienteDTO;    
           this.addresses = this.client.addresses;
-          this.isAdm = this.client.roles.findIndex(e => e == "ADMIN");
+          this.isAdm = this.client.roles.findIndex(e => e == "ADMIN");          
           this.client.cpfCnpj = this.formatCnpjCpf(this.client.cpfCnpj);
           this.getImageIfExists();
         },
@@ -124,6 +124,11 @@ export class ProfilePage {
 
   goToAdmin() {
     this.navCtrl.setRoot("AdminMenuPage");
+  }
+
+  changePassword() {
+    console.log("change");
+    
   }
 
 }

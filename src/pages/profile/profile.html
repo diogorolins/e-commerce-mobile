@@ -9,7 +9,7 @@
 
 <ion-content padding>
   <ion-item>
-    <button *ngIf="isAdm > '0'" ion-button outline block (click)="goToAdmin()">Administração</button>
+    <button *ngIf="isAdm != '-1'" ion-button outline block (click)="goToAdmin()">Administração</button>
   </ion-item>
   <ion-avatar>
     <img class="circle" [src]="client?.imageUrl || 'assets/imgs/avatar-blank.png'">
@@ -41,6 +41,7 @@
     </ion-item>
     <ion-item>
       <button ion-button outline block (click)="goToUpdate()">Alterar Perfil</button>
+      <button ion-button outline block (click)="changePassword()">Alterar Senha</button>
       <button ion-button block (click)="getCameraPicture()" [disabled]="cameraOn">Camera</button>
       <button *ngIf="picture" ion-button outline block (click)="sendPicture()">Enviar Imagem</button>
       <button *ngIf="picture" ion-button outline block (click)="cancel()" >Cancelar</button>

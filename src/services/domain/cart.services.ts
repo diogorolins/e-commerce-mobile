@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { StorageService } from "../storage.service";
 import { Cart } from "../../models/cart";
-import { ProdutoDto } from "../../models/produto.dto";
+import { ProdutoDTO } from "../../models/produto.dto";
 
 @Injectable()
 export class CartService {
@@ -24,7 +24,7 @@ export class CartService {
     return cart;
   }
 
-  addProduto(produto: ProdutoDto): Cart {
+  addProduto(produto: ProdutoDTO): Cart {
     let cart: Cart = this.getCart();
     
     let position = cart.items.findIndex(x => x.produto.id ==  produto.id);
@@ -35,7 +35,7 @@ export class CartService {
     return cart;
   }
 
-  removeProduto(produto: ProdutoDto): Cart {
+  removeProduto(produto: ProdutoDTO): Cart {
     let cart: Cart = this.getCart();
 
     let position = cart.items.findIndex(x => x.produto.id == produto.id);
@@ -46,7 +46,7 @@ export class CartService {
     return cart;
   }
 
-  increaseQuantity(produto: ProdutoDto): Cart {
+  increaseQuantity(produto: ProdutoDTO): Cart {
     let cart: Cart = this.getCart();
 
     let position = cart.items.findIndex(x => x.produto.id == produto.id);
@@ -57,7 +57,7 @@ export class CartService {
     return cart;
   }
 
-  decreaseQuantity(produto: ProdutoDto): Cart {
+  decreaseQuantity(produto: ProdutoDTO): Cart {
     let cart: Cart = this.getCart();
 
     let position = cart.items.findIndex(x => x.produto.id == produto.id);

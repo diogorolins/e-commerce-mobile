@@ -1,0 +1,26 @@
+
+<ion-header>
+  <ion-navbar>
+    <ion-title>Novo Produto</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item>
+    <ion-label stacked>Nome</ion-label>
+    <ion-input name="name" [(ngModel)]="produto.name" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label stacked>Preço</ion-label>
+    <ion-input name="price" [(ngModel)]="produto.price" type="text"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label stacked>Selecione as categorias</ion-label>
+    <ion-select multiple="true" [(ngModel)]="categoriasCombo" cancelText="cancelar">
+      <ion-option *ngFor="let c of categorias" [value]="c.id">{{c.name}}</ion-option>
+    </ion-select>
+  </ion-item>
+  <button ion-button block type="submit" (click)="submitForm()" >Enviar Produto</button>
+  
+</ion-content>

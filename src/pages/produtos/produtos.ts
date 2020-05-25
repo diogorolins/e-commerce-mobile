@@ -1,15 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
-import { ProdutoDto } from '../../models/produto.dto';
+import { IonicPage, NavController, NavParams} from 'ionic-angular';
+import { ProdutoDTO } from '../../models/produto.dto';
 import { ProdutoService } from '../../services/domain/produto.service';
 import { API_CONFIG } from '../../config/api.config';
-
-/**
- * Generated class for the ProdutosPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -18,14 +11,13 @@ import { API_CONFIG } from '../../config/api.config';
 })
 export class ProdutosPage {
 
-  items: ProdutoDto[] = [];
+  items: ProdutoDTO[] = [];
   page: number = 0;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    public produtoService: ProdutoService,
-    public loadingController: LoadingController) {
+    public produtoService: ProdutoService) {
   }
 
   ionViewDidLoad() {
@@ -33,18 +25,14 @@ export class ProdutosPage {
   }
 
   loadData() {
-    let loader = this.presentLoading();
     this.produtoService.findByCategoria(this.navParams.get('categoria_id'), this.page, 10)
       .subscribe(response => {
         let start = this.items.length;
         this.items = this.items.concat(response['content']);
-        let end = this.items.length -1;
-        loader.dismiss();
+        let end = this.items.length -1;       
         this.loadImageUrls(start, end);
       },
-        error => {
-          loader.dismiss();
-        }
+        error => {}
       );
   }
 
@@ -63,13 +51,6 @@ export class ProdutosPage {
     this.navCtrl.push("ProdutoDetailPage", {produto_id: produto_id});
   }
 
-  presentLoading() {
-    let loader = this.loadingController.create({
-      content: "Aguarde..."
-    });
-    loader.present();
-    return loader;
-  }
 
   doRefresh(refresher) {
     this.page = 0;
