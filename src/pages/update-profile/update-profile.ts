@@ -3,8 +3,6 @@ import { IonicPage, NavController, NavParams} from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { EstadoService } from '../../services/domain/estado.service';
 import { CidadeService } from '../../services/domain/cidade.service';
-import { EstadoDTO } from '../../models/estado.dto';
-import { CidadeDTO } from '../../models/cidade.dto';
 import { ClienteService } from '../../services/domain/cliente.service';
 import { ClienteDTO } from '../../models/cliente.dto';
 import { API_CONFIG } from '../../config/api.config';
@@ -25,9 +23,7 @@ import { AlertService } from '../../services/alert.service';
 export class UpdateProfilePage {
 
   formGroup: FormGroup;
-  estados: EstadoDTO[];
-  cidades: CidadeDTO[];
-  client: ClienteDTO;
+  client: ClienteDTO = new ClienteDTO;
 
   constructor(
     public navCtrl: NavController,
@@ -44,16 +40,9 @@ export class UpdateProfilePage {
       name: [this.client.name, [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
       clientType: [this.client.clientType, [Validators.required]],
       cpfCnpj: [this.client.cpfCnpj, [Validators.required, Validators.minLength(11), Validators.maxLength(14)]],
-      street: [this.client.addresses[0].street, [Validators.required]],
-      number: [this.client.addresses[0].number, [Validators.required]],
-      compl: [this.client.addresses[0].compl, []],
-      neighborhood: [this.client.addresses[0].neighborhood, []],
-      zipCode: [this.client.addresses[0].zipCode, [Validators.required]],
       phone1: [this.client.phones[0], [Validators.required]],
       phone2: [this.client.phones[1], []],
       phone3: [this.client.phones[2], []],
-      stateId: [this.client.addresses[0].city.state.id, [Validators.required]],
-      cityId: [this.client.addresses[0].city.id, [Validators.required]],
     });
   }
 
@@ -61,30 +50,15 @@ export class UpdateProfilePage {
     let id: string;
     id = this.getIdRadioClientType(this.client.clientType);
     this.formGroup.controls.clientType.setValue(id);
-    this.estadoService.findAll()
-      .subscribe(response => {
-        this.estados = response;
-        this.formGroup.controls.stateId.setValue(this.client.addresses[0].city.state.id);
-        this.updateCidades();
-      },
-        error => { });
   }
 
-  updateCidades() {
-    let estadoId = this.formGroup.value.stateId
-    this.cidadeService.findAll(estadoId)
-      .subscribe(response => {
-        this.cidades = response;
-        this.formGroup.controls.cityId.setValue(this.client.addresses[0].city.id);
-      },
-        error => { });
-  }
 
   updateUser() {
-
-    this.clienteService.update(this.formGroup.value, this.client.id)
+    let cliente: ClienteDTO = this.clienteService.chargeClientbyForm(this.formGroup.value, this.client.addresses);
+    this.clienteService.update(cliente, this.client.id)
       .subscribe(response => {
         this.updateOk();
+        this.navCtrl.pop();
       },
         error => { });
   }
@@ -96,6 +70,19 @@ export class UpdateProfilePage {
       event: () => this.navCtrl.setRoot("ProfilePage")
     }
     this.altertCtrl.showAlert(alert);
+  }
+
+  goToAddress() {
+    this.navCtrl.push("NewAddressPage", { parentPage: this, enderecosList: this.client.addresses });
+  }
+
+  chargeAddress(enderecos) {
+    this.client.addresses = enderecos;
+  }
+
+  removeAddress(endereco) {
+    var index = this.client.addresses.indexOf(endereco);
+    this.client.addresses.splice(index, 1);
   }
 
   getIdRadioClientType(clientType: string) {   

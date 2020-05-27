@@ -43,8 +43,7 @@ export class ForgotPasswordPage {
   sendAlert() {
     let alert = {
       title: "Envio de email",
-      message: "Nova senha enviada com sucesso.",
-      event: () => this.navCtrl.pop()
+      message: "Nova senha enviada com sucesso."
     };
     this.alertService.showAlert(alert);  
     

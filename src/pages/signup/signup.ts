@@ -1,18 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { EstadoService } from '../../services/domain/estado.service';
-import { CidadeService } from '../../services/domain/cidade.service';
-import { EstadoDTO } from '../../models/estado.dto';
-import { CidadeDTO } from '../../models/cidade.dto';
 import { ClienteService } from '../../services/domain/cliente.service';
-
-/**
- * Generated class for the SignupPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { AlertService } from '../../services/alert.service';
+import { ClienteDTO } from '../../models/cliente.dto';
+import { EnderecoDTO } from '../../models/endereco.dto';
 
 @IonicPage()
 @Component({
@@ -21,82 +13,84 @@ import { ClienteService } from '../../services/domain/cliente.service';
 })
 export class SignupPage {
 
+  enderecosDto: EnderecoDTO[] = []; 
   formGroup: FormGroup;
-  estados: EstadoDTO[];
-  cidades: CidadeDTO[];
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    public estadoService: EstadoService,
-    public cidadeService: CidadeService,
     public clienteService: ClienteService,
-    public altertCtrl: AlertController) {
+    public altertService: AlertService) {
       
       this.formGroup = this.formBuilder.group({
-        name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
-        email: ['', [Validators.email, Validators.required]],
-        password: ['', [Validators.required]],
-        clientType: ['', [Validators.required]],
-        cpfCnpj: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(14)]],
-        street: ['', [Validators.required]],
-        number: ['', [Validators.required]],
-        compl: ['', []],
-        neighborhood: ['', []],
-        zipCode: ['', [Validators.required]],
-        phone1: ['', [Validators.required]],
+        name: ['diogo', [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
+        email: ['diogo@diogo', [Validators.email, Validators.required]],
+        password: ['1', [Validators.required]],
+        passwordConfirm: ['1', [Validators.required]],
+        clientType: ['1', [Validators.required]],
+        cpfCnpj: ['09475414703', [Validators.required, Validators.minLength(11), Validators.maxLength(14)]],
+        phone1: ['2121', [Validators.required]],
         phone2: ['', []],
-        phone3: ['', []],
-        stateId: ['', [Validators.required]],
-        cityId: ['', [Validators.required]],
-      });
+        phone3: ['', []]
+      }, { validator: this.matchingPasswords('password', 'passwordConfirm') });
+  }
+
+  matchingPasswords(passwordKey: string, confirmPasswordKey: string) {
+    return (group: FormGroup): { [key: string]: any } => {
+      let password = group.controls[passwordKey];
+      let confirmPassword = group.controls[confirmPasswordKey];
+
+      if (password.value !== confirmPassword.value) {
+        return {
+          mismatchedPasswords: true
+        };
+      }
+    }
   }
 
   ionViewDidLoad(){
-    this.estadoService.findAll()
-      .subscribe(response => {
-        this.estados = response;
-        this.formGroup.controls.stateId.setValue(this.estados[0].id);
-        this.updateCidades();
-      },
-      error => {});
-  }
 
-  updateCidades() {
-    let estadoId = this.formGroup.value.stateId
-    this.cidadeService.findAll(estadoId)
-      .subscribe(response => {
-        this.cidades = response;
-        this.formGroup.controls.cityId.setValue(null);
-      },
-        error => {});
   }
 
   signupUser(){
-    
-    this.clienteService.insert(this.formGroup.value)
-      .subscribe(response => {
-        this.insertOk();
-      },
-      error => {});
+    if (this.enderecosDto.length == 0) {
+      let alert = {
+        title: 'Erro.',
+        message: 'Registre pelo menos 1 endereço.'
+      }
+      this.altertService.showAlert(alert);
+      
+    } else {  
+      let cliente: ClienteDTO = this.clienteService.chargeClientbyForm(this.formGroup.value, this.enderecosDto);
+      this.clienteService.insert(cliente)
+        .subscribe(response => {
+          this.insertOk();
+          this.navCtrl.pop();
+        },
+          error => { });
+    }   
   }
 
   insertOk() {
-    let alert = this.altertCtrl.create({
+    let alert = {
       title: 'Sucesso.',
-      message: 'Cadastro efetuado com sucesso.',
-      enableBackdropDismiss: false,
-      buttons: [
-        {
-          text: 'Ok',
-          handler: () => {
-            this.navCtrl.pop();
-          }
-        }
-      ]
-    });
-    alert.present();
+      message: 'Cadastro efetuado com sucesso.'
+    }
+    this.altertService.showAlert(alert);
+  }
+
+  goToAddress() {
+    this.navCtrl.push("NewAddressPage", { parentPage: this, enderecosList: this.enderecosDto});
+  }
+
+  chargeAddress(enderecos){
+    this.enderecosDto = enderecos;
+  }
+
+  removeAddress(endereco) {
+    var index = this.enderecosDto.indexOf(endereco);
+    this.enderecosDto.splice(index, 1);
   }
 
 }

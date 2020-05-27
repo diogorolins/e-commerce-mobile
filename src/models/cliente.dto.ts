@@ -1,9 +1,10 @@
 import { EnderecoDTO } from "./endereco.dto";
 
-export interface ClienteDTO {
+export class ClienteDTO {
   id: string;
   name: string;
   email: string;
+  password: string;
   imageUrl?: string;
   cpfCnpj: string;
   clientType: string;

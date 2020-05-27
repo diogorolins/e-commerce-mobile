@@ -5,6 +5,8 @@ import { ClienteDTO } from "../../models/cliente.dto";
 import { API_CONFIG } from "../../config/api.config";
 import { StorageService } from "../storage.service";
 import { ImageUtilService } from "../image-util.service";
+import { EnderecoDTO } from "../../models/endereco.dto";
+import { CidadeDTO } from "../../models/cidade.dto";
 
 @Injectable()
 export class ClienteService {
@@ -46,6 +48,23 @@ export class ClienteService {
         responseType: 'text'
       }
     )
+  }
+
+  chargeClientbyForm(form, enderecos) {
+    let client: ClienteDTO = new ClienteDTO;
+    let phones: string[] = [];
+    client.name = form.name;
+    client.email = form.email;
+    client.cpfCnpj = form.cpfCnpj;
+    client.password = form.password;
+    client.clientType = form.clientType;
+    phones.push(form.phone1);
+    phones.push(form.phone2);
+    phones.push(form.phone3);
+    client.phones = phones;
+    client.addresses = enderecos;
+    return client;
+    
   }
 
   getImageFromBucket(id: string): Observable<any> {

@@ -61,7 +61,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   listErrors(message: FieldMessage[]): string {
     let s : string = '';
     for (var i=0; i<message.length; i++){
-      s += '<p><strong>' + message[i].fieldName + ': </strong>'+ message[i].message + '</p>';
+      s += '<p>' + message[i].message + '</p>';
     }
     return s;
   }

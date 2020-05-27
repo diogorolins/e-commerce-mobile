@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Novo endereço</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="formGroup" (ngSubmit)="addAddress(); $event.preventDefault()">
+    <ion-item>
+      <ion-label stacked>Logradouro*</ion-label>
+      <ion-input formControlName="street" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Número*</ion-label>
+      <ion-input formControlName="number" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Complemento</ion-label>
+      <ion-input formControlName="compl" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Bairro</ion-label>
+      <ion-input formControlName="neighborhood" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>CEP*</ion-label>
+      <ion-input formControlName="zipCode" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Estado*</ion-label>
+      <ion-select formControlName="stateId" (ionChange)="updateCidades()">
+        <ion-option *ngFor="let estado of estados; first as f" [value]="estado.id" [selected]="f">{{estado.name}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Cidade*</ion-label>
+      <ion-select formControlName="cityId">
+        <ion-option *ngFor="let cidade of cidades;" [value]="cidade.id+'-'+cidade.name">{{cidade.name}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <button ion-button block type="submit"  [disabled] = "formGroup.invalid">Adicionar</button>
+  </form>
+</ion-content>
